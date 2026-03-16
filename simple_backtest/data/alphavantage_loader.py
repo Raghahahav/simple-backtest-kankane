@@ -26,7 +26,7 @@ class AlphaVantageLoader(DataLoader):
         symbol: str,
         start: datetime | str,
         end: datetime | str,
-        outputsize: str = "full",
+        outputsize: str = "compact",
     ) -> pd.DataFrame:
         """Fetch daily OHLCV data from Alpha Vantage."""
         try:
@@ -35,6 +35,11 @@ class AlphaVantageLoader(DataLoader):
             raise ImportError(
                 "requests is not installed. Install it with: pip install requests"
             ) from exc
+
+        if outputsize not in {"compact", "full"}:
+            raise ValueError(
+                f"Invalid outputsize '{outputsize}'. Valid values are: 'compact', 'full'."
+            )
 
         response = requests.get(
             self.BASE_URL,
@@ -50,6 +55,16 @@ class AlphaVantageLoader(DataLoader):
 
         for error_key in ("Error Message", "Information", "Note"):
             if error_key in payload:
+                if (
+                    error_key == "Information"
+                    and outputsize == "full"
+                    and "premium" in str(payload[error_key]).lower()
+                ):
+                    raise ValueError(
+                        "Alpha Vantage 'outputsize=full' requires a premium API plan. "
+                        "Use outputsize='compact' with free keys (latest ~100 points), "
+                        "or upgrade your plan for full history."
+                    )
                 raise ValueError(payload[error_key])
 
         time_series_key = "Time Series (Daily)"
@@ -78,6 +93,12 @@ class AlphaVantageLoader(DataLoader):
         data = data[(data.index >= start_ts) & (data.index <= end_ts)]
 
         if data.empty:
+            if outputsize == "compact":
+                raise ValueError(
+                    "No Alpha Vantage data in the requested date range. "
+                    "With outputsize='compact', Alpha Vantage returns only the latest ~100 points. "
+                    "Use a more recent date range, or use outputsize='full' with a premium plan."
+                )
             raise ValueError(
                 f"No Alpha Vantage data for symbol '{symbol}' between {start} and {end}"
             )
