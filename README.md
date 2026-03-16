@@ -145,8 +145,8 @@ data = YFinanceLoader().load("AAPL", "2020-01-01", "2023-12-31")
 ```python
 from simple_backtest import CCXTLoader
 
-loader = CCXTLoader(exchange_name="binance")
-data = loader.load("BTC/USDT", "2021-01-01", "2021-12-31", timeframe="1d")
+loader = CCXTLoader(exchange_name="coinbase")
+dataw = loader.load("BTC/USD", "2021-01-01", "2021-12-31", timeframe="1d")
 ```
 
 ### `AlphaVantageLoader`
