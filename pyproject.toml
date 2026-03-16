@@ -1,6 +1,6 @@
 [project]
 name = "simple-backtest-kankane"
-version = "0.3.3"
+version = "0.3.4"
 description = "Simple backtesting framework for trading strategies"
 readme = "README.md"
 requires-python = ">=3.10"
