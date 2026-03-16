@@ -1,7 +1,7 @@
 <div align="center">
 
 # Simple Backtest
-
+I have removed my githistory because i want to treat this as my base with imporvement in data loader and custom error message
 **A high-performance, asset-agnostic backtesting framework for Python**
 
 [![PyPI version](https://img.shields.io/pypi/v/simple-backtest-kankane)](https://pypi.org/project/simple-backtest-kankane/)
