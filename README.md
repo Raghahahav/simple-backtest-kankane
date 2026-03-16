@@ -1,6 +1,7 @@
 <div align="center">
 
 # Simple Backtest
+
 I have removed my githistory because i want to treat this as my base with imporvement in data loader and custom error message
 **A high-performance, asset-agnostic backtesting framework for Python**
 
@@ -223,6 +224,161 @@ config_swing = BacktestConfig.swing_trading(initial_capital=10000)
 - `GridSearchOptimizer`
 - `RandomSearchOptimizer`
 - `WalkForwardOptimizer`
+
+## 🧩 API Reference (What to Import)
+
+This section explains:
+
+- what can be imported directly from `simple_backtest`
+- what should be imported from submodules
+- what each import is typically used for
+
+### ✅ Import from top-level package
+
+These are re-exported in `simple_backtest/__init__.py` and are stable entry points for most users.
+
+```python
+from simple_backtest import (
+  # Core
+  Backtest,
+  BacktestConfig,
+  Portfolio,
+  Strategy,
+  BacktestResults,
+  StrategyResult,
+
+  # Built-in strategies
+  BuyAndHoldStrategy,
+  DCAStrategy,
+  MovingAverageStrategy,
+
+  # Optimizers
+  Optimizer,
+  GridSearchOptimizer,
+  RandomSearchOptimizer,
+  WalkForwardOptimizer,
+
+  # Commission models
+  Commission,
+  PercentageCommission,
+  FlatCommission,
+  TieredCommission,
+
+  # Data loaders
+  DataLoader,
+  CSVLoader,
+  YFinanceLoader,
+  CCXTLoader,
+  AlphaVantageLoader,
+  PolygonLoader,
+)
+```
+
+### ✅ Import from `simple_backtest.utils`
+
+Use these for execution helpers, validation, logging, and custom commission wiring.
+
+```python
+from simple_backtest.utils import (
+  # Execution price helpers
+  get_execution_price,
+  create_execution_price_extractor,
+
+  # Data/strategy validation
+  validate_dataframe,
+  validate_date_range,
+  validate_strategies,
+
+  # Validation exceptions
+  BacktestError,
+  DataValidationError,
+  DateRangeError,
+  StrategyError,
+
+  # Commission helper factory
+  get_commission_calculator,
+  create_custom_commission,
+
+  # Logging
+  get_logger,
+  setup_logging,
+  disable_logging,
+  enable_debug_logging,
+)
+```
+
+### ✅ Import from `simple_backtest.metrics`
+
+```python
+from simple_backtest.metrics import calculate_metrics, format_metrics
+```
+
+- `calculate_metrics`: compute full metric dictionary from returns/trades/portfolio data
+- `format_metrics`: convert metric dictionary into readable report text
+
+### ✅ Import from `simple_backtest.visualization`
+
+```python
+from simple_backtest.visualization import (
+  plot_equity_curve,
+  plot_drawdowns,
+  plot_returns_distribution,
+  plot_monthly_returns,
+  plot_trades,
+  plot_strategy_trades,
+  plot_rolling_metrics,
+  create_comparison_table,
+  plot_all,
+)
+```
+
+### ⚠️ What is importable but not recommended as public API
+
+You can technically import internals like:
+
+```python
+from simple_backtest.metrics.definitions import calculate_sharpe_ratio
+from simple_backtest.utils.execution import get_vwap
+```
+
+But these are lower-level internals and may change more often.
+Prefer top-level package imports and subpackage `__init__` exports shown above.
+
+### Quick guide: “which import does what?”
+
+- `Backtest`: runs strategies on price data
+- `BacktestConfig`: execution settings (capital, commission, execution price, etc.)
+- `Strategy`: base class for custom strategy logic
+- `Portfolio`: tracks cash, positions, and trades
+- `...Loader` classes: fetch/normalize OHLCV data from source
+- `...Optimizer` classes: parameter search and evaluation
+- `Commission` classes: trading-cost models
+- `utils` functions: validation, execution-price extraction, logging helpers
+- `metrics` functions: calculate/format performance metrics
+- `visualization` functions: charts and comparison views
+
+### 📌 One-page Import Cheat Sheet
+
+| You want to...                 | Import from                     | Import this                                                                                                                                                                                      |
+| ------------------------------ | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Run a backtest                 | `simple_backtest`               | `Backtest`, `BacktestConfig`                                                                                                                                                                     |
+| Build custom strategy          | `simple_backtest`               | `Strategy`                                                                                                                                                                                       |
+| Use built-in strategies        | `simple_backtest`               | `MovingAverageStrategy`, `BuyAndHoldStrategy`, `DCAStrategy`                                                                                                                                     |
+| Load CSV data                  | `simple_backtest`               | `CSVLoader`                                                                                                                                                                                      |
+| Load Yahoo Finance data        | `simple_backtest`               | `YFinanceLoader`                                                                                                                                                                                 |
+| Load crypto exchange data      | `simple_backtest`               | `CCXTLoader`                                                                                                                                                                                     |
+| Load Alpha Vantage data        | `simple_backtest`               | `AlphaVantageLoader`                                                                                                                                                                             |
+| Load Polygon data              | `simple_backtest`               | `PolygonLoader`                                                                                                                                                                                  |
+| Create your own loader base    | `simple_backtest`               | `DataLoader`                                                                                                                                                                                     |
+| Use commission models          | `simple_backtest`               | `Commission`, `PercentageCommission`, `FlatCommission`, `TieredCommission`                                                                                                                       |
+| Optimize parameters            | `simple_backtest`               | `GridSearchOptimizer`, `RandomSearchOptimizer`, `WalkForwardOptimizer`                                                                                                                           |
+| Validate input data/strategies | `simple_backtest.utils`         | `validate_dataframe`, `validate_date_range`, `validate_strategies`                                                                                                                               |
+| Build execution price logic    | `simple_backtest.utils`         | `get_execution_price`, `create_execution_price_extractor`                                                                                                                                        |
+| Configure logging              | `simple_backtest.utils`         | `setup_logging`, `enable_debug_logging`, `disable_logging`                                                                                                                                       |
+| Compute metrics                | `simple_backtest.metrics`       | `calculate_metrics`, `format_metrics`                                                                                                                                                            |
+| Plot charts                    | `simple_backtest.visualization` | `plot_equity_curve`, `plot_drawdowns`, `plot_returns_distribution`, `plot_monthly_returns`, `plot_trades`, `plot_strategy_trades`, `plot_rolling_metrics`, `create_comparison_table`, `plot_all` |
+
+**Rule of thumb**: Prefer `simple_backtest` and package `__init__` exports first. Use deep/internal module imports only when you intentionally need low-level internals.
 
 ## 📓 Notebooks
 
