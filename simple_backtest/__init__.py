@@ -1,6 +1,6 @@
 """Backtesting Framework - High-performance backtesting for trading strategies."""
 
-__version__ = "0.3.3"
+__version__ = "0.3.5"
 
 # Core imports
 # Commission imports
